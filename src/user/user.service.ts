@@ -20,7 +20,7 @@ export class UserService {
     const userExists = await this.userRepository.findOne({ where: { email } });
     const user = await this.userRepository.save(registerUserDto);
     return {
-      message: 'User created successfully' ,
+      message: 'User created successfully',
       success: true,
       data: user,
     };
