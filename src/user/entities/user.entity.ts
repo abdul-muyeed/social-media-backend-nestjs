@@ -29,6 +29,10 @@ export class User {
   async hashPassword() {
     if (!this.password) return;
     const salt = 10;
-    this.password = await bcrypt.hash(this.password, salt);
+    this.password = await bcrypt.hash(this.password.toString(), salt);
+  }
+
+  async comparePassword(password: string): Promise<boolean> {
+    return await bcrypt.compare(password.toString(), this.password);
   }
 }
