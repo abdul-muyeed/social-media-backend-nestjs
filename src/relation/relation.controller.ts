@@ -19,6 +19,12 @@ export class RelationController {
     createRelationDto.sender = req['id'];
     return this.relationService.acceptRequest(createRelationDto);
   }
+  @UseGuards(AuthGuard)
+  @Delete('delete/:id')
+  remove(@Param('id') id: string, @Request() req: Request) {
+    console.log(req['id']);
+    return this.relationService.remove(+id, +req['id']);
+  }
 
 
 }

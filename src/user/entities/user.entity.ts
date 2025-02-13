@@ -4,10 +4,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Comment } from 'src/post/entities/comment.entity';
+import { Post } from 'src/post/entities/post.entity';
 
 @Entity()
 export class User {
@@ -19,6 +24,13 @@ export class User {
   email: string;
   @Column()
   password: string;
+  @ManyToMany(() => User)
+  @JoinTable()
+  friendList: User[];
+  @OneToMany(() => Comment, (comment) => comment.owner)
+  comments: Comment[];
+  @OneToMany(() => Post, (post) => post.owner)
+  posts: Post[];
   @CreateDateColumn()
   createdAt: Date;
   @UpdateDateColumn()

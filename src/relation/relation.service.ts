@@ -80,11 +80,54 @@ export class RelationService {
     await queryRunner.startTransaction();
 
     try {
-      const newRelation = await this.relationRepository.save(relation);
-      await this.userRepository.save(senderUser);
-      await this.userRepository.save(receiverUser);
+      const newRelation = await queryRunner.manager.save(relation);
+      await queryRunner.manager.save(senderUser);
+      await queryRunner.manager.save(receiverUser);
       await queryRunner.commitTransaction();
       return newRelation;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new BadRequestException('Something went wrong');
+    } finally {
+      await queryRunner.release();
+    }
+  }
+  async remove(useId1: number, userId2: number) {
+    if (useId1 === userId2) {
+      throw new BadRequestException('You cannot remove yourself');
+    }
+    const relation =
+      (await this.relationRepository.findOne({
+        where: { sender: { id: useId1 }, receiver: { id: userId2 } },
+      })) ||
+      (await this.relationRepository.findOne({
+        where: { sender: { id: userId2 }, receiver: { id: useId1 } },
+      }));
+    if (!relation) {
+      throw new NotFoundException('Relation not found');
+    }
+    const user1 = await this.userRepository.findOne({
+      where: { id: useId1 },
+      relations: ['friendList'],
+    });
+    const user2 = await this.userRepository.findOne({
+      where: { id: userId2 },
+      relations: ['friendList'],
+    });
+    if (!user1 || !user2) {
+      throw new NotFoundException('User not found');
+    }
+    user1.friendList = user1.friendList.filter((user) => user.id !== userId2);
+    user2.friendList = user2.friendList.filter((user) => user.id !== useId1);
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      await queryRunner.manager.save(user1);
+      await queryRunner.manager.save(user2);
+      await queryRunner.manager.remove(relation);
+      await queryRunner.commitTransaction();
+      return { message: 'Relation removed successfully' };
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw new BadRequestException('Something went wrong');

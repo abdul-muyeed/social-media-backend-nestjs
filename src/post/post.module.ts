@@ -5,10 +5,11 @@ import { PostController } from './post.controller';
 import { Post } from './entities/post.entity';
 import { User } from 'src/user/entities/user.entity';
 import { Comment } from './entities/comment.entity';
+import { Relation } from 'src/relation/entities/relation.entity';
 
 @Module({
   imports:[
-    TypeOrmModule.forFeature([Post,User,Comment]),
+    TypeOrmModule.forFeature([Post,User,Comment,Relation]),
   ],
   controllers: [PostController],
   providers: [PostService],

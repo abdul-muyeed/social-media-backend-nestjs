@@ -4,11 +4,11 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
-import { FriendModule } from './friend/friend.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/entities/user.entity';
 import { Post } from './post/entities/post.entity';
 import { Comment } from './post/entities/comment.entity';
+import { RelationModule } from './relation/relation.module';
 
 @Module({
   imports: [
@@ -17,7 +17,7 @@ import { Comment } from './post/entities/comment.entity';
       useFactory: async (configService: ConfigService) => ({
         type: 'postgres',
         host: process.env.DB_HOST,
-        port: +(process.env.DB_PORT ?? 5432),
+        port: +(process.env.DB_PORT || 5432),
         username: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
@@ -29,7 +29,7 @@ import { Comment } from './post/entities/comment.entity';
     }),
     UserModule,
     PostModule,
-    FriendModule,
+    RelationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
