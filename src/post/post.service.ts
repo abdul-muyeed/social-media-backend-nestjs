@@ -79,17 +79,20 @@ export class PostService {
       relations: ['shares'],
     });
     const user = await this.UserRepository.findOne({ where: { id: userId } });
-   
 
     if (!post || !user) {
       throw new NotFoundException('Post not found');
     }
-    const isfriend = user.friendList.some((friend) => friend.id === post.owner.id);
+    const isfriend = user.friendList.some(
+      (friend) => friend.id === post.owner.id,
+    );
 
     if (!isfriend) {
-      throw new UnauthorizedException('You can only share post of your friends');
+      throw new UnauthorizedException(
+        'You can only share post of your friends',
+      );
     }
-    
+
     const sharedPost = this.postRepository.create({
       owner: user,
       content: post.content,
@@ -117,7 +120,7 @@ export class PostService {
   async findAllFromFriends(userId: number) {
     const user = await this.UserRepository.findOne({
       where: { id: userId },
-      relations: ['friendList']
+      relations: ['friendList'],
     });
     if (!user) {
       throw new NotFoundException('User not found');
@@ -125,8 +128,8 @@ export class PostService {
     const friends = user.friendList.map((friend) => friend.id);
     friends.push(userId);
     return await this.postRepository.find({
-      where: { owner: { id: In(friends) }, visiblity: true  },
-      relations: ['comments', 'likes', 'shares'], 
+      where: { owner: { id: In(friends) }, visiblity: true },
+      relations: ['comments', 'likes', 'shares'],
     });
   }
   async findAll() {
@@ -139,6 +142,4 @@ export class PostService {
       relations: ['comments', 'likes'],
     });
   }
-
-
 }

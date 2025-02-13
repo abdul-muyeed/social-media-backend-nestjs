@@ -1,12 +1,10 @@
 import {
   BadRequestException,
   ConflictException,
-  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateRelationDto } from './dto/create-relation.dto';
-import { UpdateRelationDto } from './dto/update-relation.dto';
 import { User } from 'src/user/entities/user.entity';
 import { Relation } from './entities/relation.entity';
 import { InjectRepository } from '@nestjs/typeorm';
