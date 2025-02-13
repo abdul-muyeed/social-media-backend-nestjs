@@ -78,7 +78,7 @@ export class PostService {
       where: { id },
       relations: ['shares'],
     });
-    const user = await this.UserRepository.findOne({ where: { id: userId } });
+    const user = await this.UserRepository.findOne({ where: { id: userId }, relations: ['friendList'] });
 
     if (!post || !user) {
       throw new NotFoundException('Post not found');

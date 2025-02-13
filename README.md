@@ -1,99 +1,150 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Social Media Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A NestJS-based backend for a social media application.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Tech Stack
 
-## Description
+NestJS | TypeORM | PostgreSQL | JWT | bcrypt | class-validator | class-transformer | Morgan | ESLint | Prettier | Git | GitHub | Postman | Laragon
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Prerequisites
 
-## Project setup
+- Node.js (v18 or later)
+- PostgreSQL
+- Postman (for API testing)
+
+## Installation
 
 ```bash
-$ npm install
+# Clone the repository
+git clone [repository-url]
+cd social-media-backend
+
+# Install dependencies
+npm install
 ```
 
-## Compile and run the project
+## Environment Setup
+
+Create a `.env` file in the root directory:
+
+```env
+# Server Configuration
+PORT=3001
+
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=your_password_here
+DB_NAME=social_media_db
+
+# Security Configuration
+SALT_ROUNDS=10
+JWT_SECRET=your_secure_jwt_secret_here
+```
+
+## Running the Application
 
 ```bash
-# development
-$ npm run start
+# Development mode
+npm run start:dev
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+# Production build
+npm run build
+npm run start:prod
 ```
 
-## Run tests
+The server will be available at `http://localhost:3001/api`
 
-```bash
-# unit tests
-$ npm run test
+## Database Structure
 
-# e2e tests
-$ npm run test:e2e
+### Users
 
-# test coverage
-$ npm run test:cov
-```
+- `id`: number (Primary Key)
+- `name`: string
+- `email`: string
+- `password`: string
+- `friendList`: User[]
+- `comments`: Comment[]
+- `posts`: Post[]
+- `createdAt`: DateTime
+- `updatedAt`: DateTime
 
-## Deployment
+### Posts
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+- `id`: number (Primary Key)
+- `content`: string
+- `owner`: User
+- `visibility`: boolean
+- `likes`: User[]
+- `comments`: Comment[]
+- `shares`: User[]
+- `createdAt`: DateTime
+- `updatedAt`: DateTime
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Comments
 
-```bash
-$ npm install -g mau
-$ mau deploy
-```
+- `id`: number (Primary Key)
+- `content`: string
+- `post`: Post
+- `owner`: User
+- `createdAt`: DateTime
+- `updatedAt`: DateTime
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Relations
 
-## Resources
+- `id`: number (Primary Key)
+- `sender`: User
+- `receiver`: User
+- `status`: 'pending' | 'accepted'
+- `createdAt`: DateTime
+- `updatedAt`: DateTime
 
-Check out a few resources that may come in handy when working with NestJS:
+### Database Relationships
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- Users can have many friends (self-referencing Many-to-Many)
+- Users can create many posts (One-to-Many)
+- Users can write many comments (One-to-Many)
+- Posts can have many comments (One-to-Many)
+- Users can like many posts (Many-to-Many)
+- Users can share many posts (Many-to-Many)
+- Users can send/receive friend requests (Many-to-One through Relations)
 
-## Support
+## API Endpoints
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+All endpoints are prefixed with `/api`
 
-## Stay in touch
+### Authentication
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- `POST /auth/register` - Register new user
+- `POST /auth/login` - Login user
 
-## License
+### Posts
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- `GET /posts` - Get all posts
+- `GET /posts/:id` - Get post by ID
+- `GET /posts/feed` - Get personalized feed of posts from friends and visible
+- `POST /posts` - Create new post
+- `PATCH /posts/:id/like` - Toggle like on a post
+- `PATCH /posts/:id/comment` - Add comment to post
+- `PATCH /posts/:id/share` - Share a post to your profile
+
+### friends
+- `POST /friends/request` - send friend request
+- `PATCH /friends/accept` - Accept pending friend request
+- `DELETE /friends/delete/1` - Remove friend or cancel request
+
+
+### Online API Documentation
+View the complete API documentation online:
+[Social Media Nestjs app API Documentation](https://documenter.getpostman.com/view/28731276/2sAYXCkyc2)
+
+## Features
+
+- JWT-based authentication
+- Request logging with Morgan
+- CORS enabled
+- API route prefix
+- TypeScript implementation
+- ESLint + Prettier configuration
+
