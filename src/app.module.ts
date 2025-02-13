@@ -7,6 +7,8 @@ import { PostModule } from './post/post.module';
 import { FriendModule } from './friend/friend.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/entities/user.entity';
+import { Post } from './post/entities/post.entity';
+import { Comment } from './post/entities/comment.entity';
 
 @Module({
   imports: [
@@ -19,12 +21,11 @@ import { User } from './user/entities/user.entity';
         username: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
-        entities: [User],
+        entities: [User, Post, Comment],
         synchronize: true,
         autoLoadEntities: true,
       }),
       inject: [ConfigService],
-      
     }),
     UserModule,
     PostModule,
