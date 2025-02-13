@@ -8,7 +8,7 @@ import {
 import { CreatePostDto } from './dto/create-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from './entities/post.entity';
-import { DataSource, Not, Repository } from 'typeorm';
+import { DataSource, In, Not, Repository } from 'typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Comment } from './entities/comment.entity';
 import { Relation } from 'src/relation/entities/relation.entity';
@@ -114,7 +114,21 @@ export class PostService {
       await queryRunner.release();
     }
   }
-
+  async findAllFromFriends(userId: number) {
+    const user = await this.UserRepository.findOne({
+      where: { id: userId },
+      relations: ['friendList']
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    const friends = user.friendList.map((friend) => friend.id);
+    friends.push(userId);
+    return await this.postRepository.find({
+      where: { owner: { id: In(friends) }, visiblity: true  },
+      relations: ['comments', 'likes', 'shares'], 
+    });
+  }
   async findAll() {
     return await this.postRepository.find();
   }

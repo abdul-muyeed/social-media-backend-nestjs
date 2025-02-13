@@ -46,6 +46,12 @@ export class PostController {
   share(@Param('id') id: string, @Request() req: Request) {
     return this.postService.share(+id, req['id']);
   }
+  @UseGuards(AuthGuard)
+  @Get('feed')
+  findAllFromFriends(@Request() req: Request) {
+    const id = req['id'];
+    return this.postService.findAllFromFriends(id);
+  }
 
   @UseGuards(AuthGuard)
   @Get()
