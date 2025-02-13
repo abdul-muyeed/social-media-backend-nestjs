@@ -132,7 +132,7 @@ All endpoints are prefixed with `/api`
 ### friends
 - `POST /friends/request` - send friend request
 - `PATCH /friends/accept` - Accept pending friend request
-- `DELETE /friends/delete/1` - Remove friend or cancel request
+- `DELETE /friends/delete/:id` - Remove friend or cancel request
 
 
 ### Online API Documentation
